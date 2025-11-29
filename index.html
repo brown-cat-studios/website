@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>brown cat studios</title>
+    <link rel="icon" href="icn.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @font-face {
+            font-family: 'Athletic';
+            src: url('Athletic.TTF') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
+
+    <style>
+        .font-varsity {
+            font-family: 'Athletic', serif;
+        }
+
+        @keyframes blurReveal {
+            0% {
+                opacity: 0;
+                filter: blur(12px);
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                filter: blur(0);
+                transform: translateY(0);
+            }
+        }
+
+        .animate-reveal {
+            animation: blurReveal 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .text-brown-custom {
+            color: #523525; 
+        }
+
+
+        .selection-overlay {
+            position: fixed;
+            background: rgba(74,51,42,0.12);
+            border-radius: 6px;
+            pointer-events: none;
+            transition: left 0.45s ease, width 0.45s ease, opacity 0.22s ease 0.45s;
+            z-index: 9999;
+        }
+        
+        body, html {
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-white flex items-center justify-center h-screen w-screen selection:bg-[#4A332A] selection:text-white">
+
+    <main class="max-w-4xl px-6 md:px-12 flex flex-col items-start justify-center animate-reveal opacity-0">
+        
+        <div class="mb-6 w-16 h-16 md:w-20 md:h-20 flex-shrink-0">
+            <img src="icn.png" alt="Logo" class="w-full h-full object-contain rounded-xl">
+        </div>
+
+        <h1 id="main-heading" class="font-varsity text-brown-custom text-3xl md:text-4xl lg:text-5xl leading-tight uppercase tracking-wide text-left">WE ARE A STUDIO RAN BY A BUNCH OF BROWN CATS THAT MAKE WHATEVER THE FUCK THEY WANT, AS LONG AS IT PUTS PEOPLE OVER PROFIT.</h1>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const main = document.querySelector('main.animate-reveal');
+            const heading = document.getElementById('main-heading');
+            if (!heading) return;
+
+            const textNode = Array.from(heading.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
+            if (!textNode) return;
+
+            const fullText = textNode.textContent;
+            const target = 'FUCK';
+            const startIndex = fullText.indexOf(target);
+            if (startIndex === -1) return;
+
+            const uckStart = startIndex + 1;
+            const uckEnd = startIndex + target.length;
+
+            function getRectForOffsets(a, b) {
+                const range = document.createRange();
+                range.setStart(textNode, a);
+                range.setEnd(textNode, b);
+                const r = range.getBoundingClientRect();
+                try { range.detach && range.detach(); } catch (e) {}
+                return r;
+            }
+
+            function animateOverlaySelection() {
+                const lastRect = getRectForOffsets(uckEnd - 1, uckEnd);
+                const fullRect = getRectForOffsets(uckStart, uckEnd);
+
+                if (!lastRect.width || !fullRect.width) return;
+
+                const overlay = document.createElement('div');
+                overlay.className = 'selection-overlay';
+                Object.assign(overlay.style, {
+                    left: `${lastRect.left}px`,
+                    top: `${lastRect.top}px`,
+                    width: `${lastRect.width}px`,
+                    height: `${lastRect.height}px`,
+                    opacity: '1',
+                });
+                document.body.appendChild(overlay);
+
+                overlay.getBoundingClientRect();
+                requestAnimationFrame(() => {
+                    overlay.style.left = `${fullRect.left}px`;
+                    overlay.style.width = `${fullRect.width}px`;
+                });
+
+                overlay.addEventListener('transitionend', function handler(e) {
+                    if (e.propertyName !== 'width') return;
+                    overlay.removeEventListener('transitionend', handler);
+
+                    const before = textNode.textContent.slice(0, uckStart);
+                    const after = textNode.textContent.slice(uckEnd);
+                    textNode.textContent = before + '#'.repeat(uckEnd - uckStart) + after;
+
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.remove(), 260);
+                });
+            }
+
+            if (main) {
+                main.addEventListener('animationend', () => {
+                    setTimeout(animateOverlaySelection, 1000);
+                }, { once: true });
+            } else {
+                setTimeout(animateOverlaySelection, 1000);
+            }
+        });
+    </script>
+
+</body>
+</html>
