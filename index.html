@@ -1,3 +1,11 @@
+<!--
+    BROWN CAT STUDIOS
+    MAIN WEBSITE
+    CLOSED FOR ISSUES OR CONTRIBUTIONS; ANY QUESTIONS OR REFERENCES CONTACT THROUGH EMAIL
+
+    PROTOTYPED FROM STABLESTREAM/PLAYABLES-CENTRAL-PROTOTYPE
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,11 +71,11 @@
         }
 
         .text-brown-custom {
-            color: #523525; 
+            color: #FFFEE8; 
         }
 
         .link-item {
-            color: #523525;
+            color: #FFFEE8;
             font-family: 'Ubuntu', sans-serif;
             font-weight: 500;
             font-size: 1.125rem;
@@ -81,13 +89,13 @@
 
         .link-item:hover,
         .link-item:focus-visible {
-            background: #523525;
-            color: #fff;
+            background: #FFFEE8;
+            color: #523525;
         }
 
         .selection-overlay {
             position: fixed;
-            background: rgba(74,51,42,0.18);
+            background: rgba(255, 228, 218, 0.18);
             border-radius: 6px;
             pointer-events: none;
             transition: left 0.45s ease, width 0.45s ease, opacity 0.22s ease 0.45s;
@@ -103,9 +111,30 @@
             height: 100%;
             width: 100%;
         }
+
+        body {
+            background: url('ubuntuassets/background.png') center center / cover no-repeat;
+            color: #FFFEE8;
+        }
+
+        .background-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 40%, rgba(0, 0, 0, 0.25) 100%);
+            backdrop-filter: blur(12px);
+            z-index: 1;
+        }
+
+        main {
+            position: relative;
+            z-index: 2;
+        }
     </style>
 </head>
-<body class="bg-white flex items-center justify-center h-screen w-screen selection:bg-[#4A332A] selection:text-white">
+<body class="flex items-center justify-start h-screen w-screen selection:bg-[#4A332A] selection:text-white">
+
+    <div class="background-overlay" aria-hidden="true"></div>
 
     <main class="max-w-4xl px-6 md:px-12 flex flex-col items-start justify-center animate-reveal">
         
